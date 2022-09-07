@@ -1,40 +1,31 @@
-import React, { useState } from "react";
-import Button from "../components/Button";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import Button from '../components/Button';
+import { useNavigate } from 'react-router-dom';
+import Input from '../components/Input';
 
 const Login = () => {
-  const [user, setUser] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [user, setUser] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const history = useNavigate();
 
   const handleAddLocalStorage = () => {
     if (!!user) {
-      localStorage.setItem("user", user);
-      history("/home");
+      localStorage.setItem('user', user);
+      history('/home');
     } else {
-      setErrorMessage("Kullanıcı adı giriniz.");
+      setErrorMessage('Kullanıcı adı giriniz.');
     }
   };
 
   return (
     <div className="todo-content">
       <form>
-        <input
-          type="text"
-          placeholder="Kullanıcı Adı Giriniz."
-          value={user}
-          onChange={(e) => setUser(e.target.value)}
-        />
+        <Input type="text" placeholder="Kullanıcı Adı Giriniz." value={user} onChange={e => setUser(e.target.value)} />
         <div className="multi-button-content">
-          <Button
-            type="button"
-            className="edit-button"
-            onClick={handleAddLocalStorage}
-            text="Giriş Yap"
-          />
+          <Button type="button" className="edit-button" onClick={handleAddLocalStorage} text="Giriş Yap" />
         </div>
       </form>
-      <small>{errorMessage ? errorMessage : ""}</small>
+      <small>{errorMessage ? errorMessage : ''}</small>
     </div>
   );
 };

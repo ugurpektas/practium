@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
-import Todo from "../components/Todo";
-import Button from "../components/Button";
+import React, { useEffect, useState } from 'react';
+import Todo from '../components/Todo';
+import Button from '../components/Button';
+import Input from '../components/Input';
 
 const Home = () => {
   const [todoItems, setTodoItems] = useState([]);
   const [todo, setTodo] = useState({
-    id: "",
-    name: "",
+    id: '',
+    name: '',
   });
   const [isEditedTodo, setIsEditedTodo] = useState(null);
   const [loading, setLoading] = useState({
@@ -20,17 +21,17 @@ const Home = () => {
   const fetchData = () => {
     setLoading({ ...loading, isLoading: true });
 
-    fetch("https://63171ab1cb0d40bc414c1674.mockapi.io/todos")
-      .then((response) => response.json())
-      .then((data) => {
+    fetch('https://63171ab1cb0d40bc414c1674.mockapi.io/todos')
+      .then(response => response.json())
+      .then(data => {
         setTodoItems(data);
         setLoading({ ...loading, isLoading: false });
         setTodo({
-          id: "",
-          name: "",
+          id: '',
+          name: '',
         });
       })
-      .catch((error) => console.log(error));
+      .catch(error => console.log(error));
   };
 
   useEffect(() => {
@@ -39,8 +40,8 @@ const Home = () => {
     return () => {
       setTodoItems([]);
       setTodo({
-        id: "",
-        name: "",
+        id: '',
+        name: '',
       });
       setIsEditedTodo(null);
     };
@@ -54,14 +55,14 @@ const Home = () => {
     };
 
     if (todo.name.length >= 3)
-      fetch("https://63171ab1cb0d40bc414c1674.mockapi.io/todos", {
-        method: "POST",
+      fetch('https://63171ab1cb0d40bc414c1674.mockapi.io/todos', {
+        method: 'POST',
         headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(body),
-      }).then((response) => {
+      }).then(response => {
         if (response) {
           fetchData();
         }
@@ -69,7 +70,7 @@ const Home = () => {
       });
   };
 
-  const handleCheckTodoItem = (todo) => {
+  const handleCheckTodoItem = todo => {
     if (todo) {
       setIsEditedTodo(todo);
       setLoading({ ...loading, isModalOpen: true });
@@ -80,19 +81,14 @@ const Home = () => {
     setLoading({ ...loading, isEditLoading: true });
 
     if (isEditedTodo) {
-      fetch(
-        `https://63171ab1cb0d40bc414c1674.mockapi.io/todos/${Number(
-          isEditedTodo.id
-        )}`,
-        {
-          method: "PUT",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(isEditedTodo),
-        }
-      ).then((response) => {
+      fetch(`https://63171ab1cb0d40bc414c1674.mockapi.io/todos/${Number(isEditedTodo.id)}`, {
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(isEditedTodo),
+      }).then(response => {
         if (response) {
           fetchData();
         }
@@ -102,16 +98,16 @@ const Home = () => {
     }
   };
 
-  const handleDeleteTodoItem = (id) => {
+  const handleDeleteTodoItem = id => {
     setLoading({ ...loading, isDeleteLoading: true });
 
     fetch(`https://63171ab1cb0d40bc414c1674.mockapi.io/todos/${Number(id)}`, {
-      method: "DELETE",
+      method: 'DELETE',
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
-    }).then((response) => {
+    }).then(response => {
       if (response) {
         fetchData();
       }
@@ -125,27 +121,19 @@ const Home = () => {
         <div className="modal">
           <div className="todo-content">
             <form>
-              <input
+              <Input
                 type="text"
                 placeholder="Todo ekle"
                 value={isEditedTodo.name}
-                onChange={(e) =>
-                  setIsEditedTodo({ ...isEditedTodo, name: e.target.value })
-                }
+                onChange={e => setIsEditedTodo({ ...isEditedTodo, name: e.target.value })}
               />
               <div className="multi-button-content">
-                <Button
-                  type="button"
-                  className="edit-button"
-                  onClick={editModal}
-                  disabled={loading.isEditLoading}
-                  text="Düzenle"
-                />
+                <Button type="button" className="edit-button" onClick={editModal} disabled={loading.isEditLoading} text="Düzenle" />
                 <Button
                   type="button"
                   className="delete-button"
                   onClick={() => setIsEditedTodo(null)}
-                  disabled={loading.isEditLoading}
+                  disabled={loading.isEditLoading && isEditedTodo.name.length < 3}
                   text="İptal"
                 />
               </div>
@@ -155,16 +143,11 @@ const Home = () => {
       ) : (
         <>
           <form>
-            <input
-              type="text"
-              placeholder="Todo ekle"
-              value={todo.name}
-              onChange={(e) => setTodo({ ...todo, name: e.target.value })}
-            />
+            <Input type="text" placeholder="Todo ekle" value={todo.name} onChange={e => setTodo({ ...todo, name: e.target.value })} />
             <Button
               type="button"
               className="edit-button"
-              disabled={!todo && loading.isAddLoading}
+              disabled={!todo && loading.isAddLoading && todo.name.length < 3}
               onClick={handleAddTodo}
               text="Ekle"
             />
